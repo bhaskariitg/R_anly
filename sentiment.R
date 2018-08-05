@@ -1,5 +1,5 @@
 #Read File
-appletweets<-reaad.csv("APPLE-Twiitter-Sentiment.csv",header=TRUE,stringAsFactors=FALSE)
+appletweets<-read.csv("Apple-Twiitter-Sentiment.csv",header=TRUE,stringsAsFactors=FALSE)
 str(appletweets)
 #To detect sentiment of tweets, factorize the data into categories
 appletweets$sentiment<-as.factor(appletweets$sentiment)
@@ -10,14 +10,14 @@ library(tm)
 install.packages("SnowballC")
 library(SnowballC)
 #Using Corpus(Collection of text documents) from tm package.We will use text column of our data frame
-doc<-Corpus(VectorSource(apple$text))
+doc<-Corpus(VectorSource(appletweets$text))
 #Preprocess the data to clean the irregularities using tm_map function
 #Change all the words to lowercase
 doc<-tm_map(doc,tolower)
 #Now remove Punctuation
 doc<-tm_map(doc,removePunctuation)
 #Remove stop words
-doc<-tm_map(doc,removeWords,c("apple",StopWords("english")))
+doc<-tm_map(doc,removeWords,c("apple",stopwords("english")))
 #Stem Document
 doc<-tm_map(doc,stemDocument)
 #Extract the word frequencies to use in our problem
@@ -50,5 +50,5 @@ table(test$sentiment,predictforest)
 table(test$sentiment)
 install.packages("e1071")
 tweetssvm<-svm(sentiment~.,data=train)
-predictsvm<-predict(tweetssvm.newdata=test)
+predictsvm<-predict(tweetssvm,newdata=test)
 table(test$sentiment,predictsvm)
