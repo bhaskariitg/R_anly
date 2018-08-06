@@ -52,3 +52,14 @@ install.packages("e1071")
 tweetssvm<-svm(sentiment~.,data=train)
 predictsvm<-predict(tweetssvm,newdata=test)
 table(test$sentiment,predictsvm)
+#Cross validation 
+install.packages("caret")
+library(caret)
+control<-trainControl(method="repeatedcv", number=10,repeats=3, search="grid")
+metric<-"Accuracy"
+tunegrid<-expand.grid(.mtry=c(1:15))
+rf<-train(sentiment~., data=train, method="rf",metric=metric,tuneGrid=tunegrid,trControl=control)
+print(rf)
+rf$bestTune$mtry
+prediction<-predict(rf, newdata=test)
+table(test$sentiment,prediction)
